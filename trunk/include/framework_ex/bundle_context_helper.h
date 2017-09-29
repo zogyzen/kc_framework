@@ -7,8 +7,9 @@ using namespace std;
 #include <boost/dll.hpp>
 using namespace boost;
 
-#include "framework/service_i.h"
 #include "framework/framework_i.h"
+#include "framework_ex/bundle_context_ex_i.h"
+#include "framework_ex/service_ex_i.h"
 
 extern const char* c_dll_extname;
 
@@ -29,7 +30,7 @@ namespace KC
                     auto _getFramework = m_lib.get<IFramework&(const char*)>(c_frameworFuncName);
                     IFramework& fx = _getFramework(sDir.c_str());
                     m_fx = &fx;
-                    m_context = fx.NewContext((sDir + "/" + g_ModuleDirectory).c_str());
+                    m_context = dynamic_cast<IBundleContextEx*>(fx.NewContext((sDir + "/" + g_ModuleDirectory).c_str()));
                 }
             }
         }
@@ -46,11 +47,11 @@ namespace KC
             return m_lib.is_loaded() && nullptr != m_context;
         }
 
-        IBundleContext& getContext(void)
+        IBundleContextEx& getContext(void)
         {
             if (!this->isSuccess())
                 throw std::runtime_error("The framework not loaded.");
-            return *m_context;
+            return dynamic_cast<IBundleContextEx&>(*m_context);
         }
 
     private:

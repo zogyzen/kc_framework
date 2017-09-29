@@ -1,12 +1,14 @@
 #pragma once
 
-#include "framework/bundle_context_i.h"
 #include "common/log_info.h"
+#include "framework/bundle_context_i.h"
+#include "framework_ex/service_reference_ex_i.h"
+#include "framework_ex/framework_exception.h"
 
 namespace KC
 {
-	class IBundleContextEx : public IBundleContext
-	{
+    class IBundleContextEx : public IBundleContext
+    {
     public:
         // 写日志
         virtual bool CALL_TYPE WriteLogTrace(const char* info, const char* place, const char* other = "") const
@@ -29,7 +31,7 @@ namespace KC
             }
             return bResult;
         }
-		virtual bool CALL_TYPE WriteLogInfo(const char* info, const char* place, const char* other = "") const
+        virtual bool CALL_TYPE WriteLogInfo(const char* info, const char* place, const char* other = "") const
         {
             bool bResult = true;
             if (this->GetCfgLogLevel() <= (int)boost::log::trivial::info)
@@ -39,7 +41,7 @@ namespace KC
             }
             return bResult;
         }
-		virtual bool CALL_TYPE WriteLogWarning(const char* info, const char* place, const char* other = "") const
+        virtual bool CALL_TYPE WriteLogWarning(const char* info, const char* place, const char* other = "") const
         {
             bool bResult = true;
             if (this->GetCfgLogLevel() <= (int)boost::log::trivial::warning)
@@ -49,7 +51,7 @@ namespace KC
             }
             return bResult;
         }
-		virtual bool CALL_TYPE WriteLogError(const char* info, const char* place, const char* other = "") const
+        virtual bool CALL_TYPE WriteLogError(const char* info, const char* place, const char* other = "") const
         {
             bool bResult = true;
             if (this->GetCfgLogLevel() <= (int)boost::log::trivial::error)
@@ -59,7 +61,7 @@ namespace KC
             }
             return bResult;
         }
-		virtual bool CALL_TYPE WriteLogFatal(const char* info, const char* place, const char* other = "") const
+        virtual bool CALL_TYPE WriteLogFatal(const char* info, const char* place, const char* other = "") const
         {
             bool bResult = true;
             if (this->GetCfgLogLevel() <= (int)boost::log::trivial::fatal)
@@ -70,11 +72,20 @@ namespace KC
             return bResult;
         }
 
-	public:
+    public:
         // 写日志
         virtual bool CALL_TYPE WriteLog(TLogInfo) const = 0;
+        // 获取服务接口
+        template<typename IF>
+        IF& getService(const char* GUID)
+        {
+            IServiceReferenceEx* srvRef = dynamic_cast<IServiceReferenceEx*>(this->takeServiceReference(GUID));
+            if (nullptr == srvRef)
+                throw TFWSrvRefException(0, __FUNCTION__, "Can't get service reference.", typeid(IF).name(), GUID, -1);
+            return srvRef->getServiceSafe<IF>();
+        }
 
     protected:
         virtual CALL_TYPE ~IBundleContextEx(void) = default;
-	};
+    };
 }

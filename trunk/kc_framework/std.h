@@ -24,11 +24,11 @@ using namespace std;
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/dll.hpp>
 using namespace boost;
 
 #include "common/knewcode_version.h"
 #include "util/auto_release.h"
-#include "util/load_library.h"
 #include "util/util_func.h"
 #include "util/proc_meminfo.h"
 #include "util/register_signal.h"

@@ -2,6 +2,8 @@
 #include "bundle.h"
 #include "bundle_context.h"
 
+extern const char* c_dll_extname;
+
 //---------------------------------------------------------------------------
 // TBundle类
 CBundle::CBundle(const char* name, const char* path, CBundleContext& ct)
@@ -47,21 +49,21 @@ bool CBundle::load(void) const
 	if (bsFree == m_state)
 	{
         // 加载动态库
-        string sError;
-        if (nullptr == m_libPtr)
-            m_libPtr = new KLoadLibrary<true>((m_path + "/" + m_name).c_str(), sError);
-        if (sError.length() > 0)
-            throw TFWBundleException(1, __FUNCTION__, sError, m_name);
+        if (!m_lib.is_loaded())
+        {
+            string sDllPath = m_path + "/" + m_name + c_dll_extname;
+            system::error_code ec;
+            m_lib.load(sDllPath, ec);
+            if (ec)
+                throw TFWBundleException(1, __FUNCTION__, "[" + sDllPath + "] " + ec.message(), m_name);
+        }
         // 初始化函数
-        typedef IBundleActivator& CALL_TYPE (*TFuncInitActor)(const IBundle&);
-        TFuncInitActor _Init = m_libPtr->GetLibFunc<TFuncInitActor>(g_ModuleInitActor, sError);
-        if (sError.length() > 0)
-            throw TFWBundleException(2, __FUNCTION__, sError, m_name);
-        if (nullptr == _Init)
-            throw TFWBundleException(3, __FUNCTION__, this->getContext().getHint("Can_t_get_the_function_") + m_name + "::InitActor", m_name);
+        if (!m_lib.has(g_ModuleInitActor))
+            throw TFWBundleException(2, __FUNCTION__, this->getContext().getHint("Can_t_get_the_function_") + m_name + "::InitActor", m_name);
+        auto _Init = m_lib.get<IBundleActivator&(const IBundle&)>(g_ModuleInitActor);
         m_actor = &_Init(*this);
         if (nullptr != m_actor) m_state = bsLoaded;
-	}
+    }
 	return bsFree != m_state;
 }
 
@@ -72,16 +74,17 @@ bool CBundle::free(void) const
 		this->stop();
 	if (bsLoaded == m_state)
     {
-        if (nullptr != m_libPtr)
+        if (m_lib.is_loaded())
         {
             // 卸载函数
-            typedef void CALL_TYPE (*TFuncUninitActor)(void);
-            TFuncUninitActor _Uninit = m_libPtr->GetLibFunc<TFuncUninitActor>(g_ModuleUninitActor);
-            _Uninit();
+            if (m_lib.has(g_ModuleUninitActor))
+            {
+                auto _Uninit = m_lib.get<void(void)>(g_ModuleInitActor);
+                _Uninit();
+            }
             m_actor = nullptr;
             // 卸载动态库
-            delete m_libPtr;
-            m_libPtr = nullptr;
+            m_lib.unload();
         }
 		m_state = bsFree;
     }

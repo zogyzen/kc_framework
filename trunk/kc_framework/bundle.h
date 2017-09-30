@@ -36,7 +36,7 @@ namespace KC
         // 插件上下文
         CBundleContext& m_Context;
         // 动态库加载
-        mutable KLoadLibrary<true>* m_libPtr = nullptr;
+        mutable dll::shared_library m_lib;
         // 模块生命周期
         mutable IBundleActivator* m_actor = nullptr;
         // 模块状态

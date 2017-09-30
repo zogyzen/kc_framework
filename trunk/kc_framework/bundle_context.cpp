@@ -46,7 +46,7 @@ CBundleContext::~CBundleContext()
 // 安装、卸载模块
 IBundle* CBundleContext::installBundle(const char* sName, const char* sPath, IBundle::TBundleState iAct)
 {
-	CBundle* result = nullptr;	try
+	CBundle* result = nullptr;	try
 	{
 		// 创建模块代理
 		CBundle* bundle = new CBundle(sName, sPath, *this);
@@ -154,11 +154,11 @@ IServiceRegistration* CBundleContext::registerService(IService& srv)
 // 注销服务
 bool CBundleContext::unregisterService(IServiceRegistration*& reg)
 {
-	if (nullptr != reg && this->unregisterService(reg->getGUID()))        reg = nullptr;
+	if (nullptr != reg && this->unregisterService(reg->getGUID()))        reg = nullptr;
 	return nullptr == reg;
 }
 bool CBundleContext::unregisterService(const char* symbolic)
-{	bool bResult = false;
+{	bool bResult = false;
 	try
 	{
 		// 加锁
@@ -296,6 +296,24 @@ IKcLockWork& CBundleContext::LockWork(void)
 int CBundleContext::GetTimeOutSeconds(void) const
 {
     return m_timeout_seconds;
+}
+
+// 得到配置信息
+const char* CBundleContext::GetCfgInfo(const char* sNode, const char* sAttr, const char* sDefault) const
+{
+    static thread_local string sResult = (nullptr == sDefault ? "" : sDefault);
+    if (boost::filesystem::exists(m_cfgFile))
+    {
+        string strNode = sNode;
+        boost::property_tree::ptree pt;
+        read_xml(m_cfgFile, pt);
+        if (pt.get_child_optional(strNode))
+        {
+            string strNodeAttr = (nullptr == sAttr || strlen(sAttr) == 0 ? strNode : strNode + ".<xmlattr>." + sAttr);
+            sResult = pt.get<string>(strNodeAttr);
+        }
+    }
+    return sResult.c_str();
 }
 
 // 启动

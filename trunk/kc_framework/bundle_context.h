@@ -47,6 +47,8 @@ namespace KC
         IKcLockWork& CALL_TYPE LockWork(void) override;
         // 超时时间
         int CALL_TYPE GetTimeOutSeconds(void) const override;
+        // 得到配置信息
+        const char* CALL_TYPE GetCfgInfo(const char*, const char*, const char*) const override;
 
     protected:
         // 注销服务
@@ -94,13 +96,16 @@ namespace KC
         typedef map<string, TSrvRegPtr> TSrvRegMap;
         TSrvRegMap m_SrvRegMap;
         // 服务引用列表
-        typedef map<long, CServiceReference*> TSrvRefLst;        typedef map<string, TSrvRefLst> TSrvRefMap;
+        typedef map<long, CServiceReference*> TSrvRefLst;
+        typedef map<string, TSrvRefLst> TSrvRefMap;
         TSrvRefMap m_SrvRefMap;
 
     private:
         // 模块层
         CKcMutex m_mtxBundle;
-        // 模块列表        typedef std::shared_ptr<CBundle> TBundlePtr;        typedef map<string, TBundlePtr> TBundleMap;
+        // 模块列表
+        typedef std::shared_ptr<CBundle> TBundlePtr;
+        typedef map<string, TBundlePtr> TBundleMap;
         TBundleMap m_BundleMap;
     };
 }

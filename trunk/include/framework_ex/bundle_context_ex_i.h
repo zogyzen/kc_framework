@@ -76,13 +76,17 @@ namespace KC
         // 写日志
         virtual bool CALL_TYPE WriteLog(TLogInfo) const = 0;
         // 获取服务接口
-        template<typename IF>
-        IF& getService(const char* GUID)
+        IServiceReferenceEx& getServiceRef(const char* GUID)
         {
             IServiceReferenceEx* srvRef = dynamic_cast<IServiceReferenceEx*>(this->takeServiceReference(GUID));
             if (nullptr == srvRef)
-                throw TFWSrvRefException(0, __FUNCTION__, "Can't get service reference.", typeid(IF).name(), GUID, -1);
-            return srvRef->getServiceSafe<IF>();
+                throw TFWSrvRefException(0, __FUNCTION__, "Can't get service reference.", "", GUID, -1);
+            return *srvRef;
+        }
+        template<typename IF>
+        IF& getService(const char* GUID)
+        {
+            return this->getServiceRef(GUID).getServiceSafe<IF>();
         }
 
     protected:

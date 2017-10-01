@@ -23,20 +23,20 @@ namespace KC
 			lglvError = boost::log::trivial::error,			// 错误
 			lglvFatal = boost::log::trivial::fatal          // 致命
 		};
-	public:
+	public:
 	    //TLogInfo(void) = delete;
 		TLogInfo(string info, string place, TLogLevel level = lglvInfo, string other = "")
 			: m_info(info), m_place(place), m_level(level)
 			, m_other(other), m_excpID(0), m_LogType(2), m_refID(0) {}
 		TLogInfo(TException& ex, string info = "")
 			: m_info(ex.CurrPosInfo() + info + ex.error_info()), m_place(ex.error_place()), m_level(lglvError)
-			, m_other(ex.OtherInfo()), m_excpID(ex.error_id()), m_excpType(ex.ExceptType()), m_LogType(2), m_refID(0) {}
+                        , m_other(ex.OtherInfo()), m_excpType(ex.ExceptType()), m_excpID(ex.error_id()), m_LogType(2), m_refID(0) {}
         TLogInfo(const TLogInfo& c)
             : m_info(c.m_info), m_place(c.m_place), m_level(c.m_level), m_other(c.m_other)
             , m_excpType(c.m_excpType), m_excpID(c.m_excpID)
             , m_LogType(c.m_LogType), m_bundleName(c.m_bundleName), m_serviceName(c.m_serviceName), m_serviceGUID(c.m_serviceGUID), m_refID(c.m_refID)
             , m_ProcessID(c.m_ProcessID), m_threadID(c.m_threadID) {}
-	public:
+	public:
 		// 用户输入信息
 		string m_info;			            // 日志消息
 		string m_place;			            // 调用的位置

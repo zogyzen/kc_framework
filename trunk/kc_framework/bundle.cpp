@@ -2,7 +2,11 @@
 #include "bundle.h"
 #include "bundle_context.h"
 
-extern const char* c_dll_extname;
+#ifdef WIN32    // Windows环境
+    const char* c_dll_extname = ".dll";
+#else           // linux环境
+    const char* c_dll_extname = ".so";
+#endif
 
 //---------------------------------------------------------------------------
 // TBundle类

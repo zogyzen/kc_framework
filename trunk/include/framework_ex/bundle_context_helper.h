@@ -11,8 +11,11 @@ using namespace boost;
 #include "framework_ex/bundle_context_ex_i.h"
 #include "framework_ex/service_ex_i.h"
 
-// 动态库的扩展名，Linux下为“.so”，Windows下为“.dll”。需要在自己的工程里定义一个全局变量。
-extern const char* c_dll_extname;
+#ifdef WIN32    // Windows环境
+    const char* c_dll_extname = ".dll";
+#else           // linux环境
+    const char* c_dll_extname = ".so";
+#endif
 
 namespace KC
 {

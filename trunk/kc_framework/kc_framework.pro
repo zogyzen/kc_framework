@@ -62,10 +62,9 @@ win32{
     LIBS += D:\mycode\library\windows\boost_1_64_qt\lib\libboost_thread-mgw53-mt-1_64.a
     LIBS += -ldbghelp
     LIBS += -lpsapi
-    SOURCES += const_windows.cpp
+    DEFINES += WIN32
 }
 unix {
     target.path = /usr/lib
     INSTALLS += target
-    SOURCES += const_linux.cpp
 }

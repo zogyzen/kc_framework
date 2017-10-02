@@ -3,6 +3,7 @@
 <Config>
 	<Parameters>
 		<logging Level="debug" />	<!-- trace、debug、info、warning、error -->
+		<log_use_thread value="1" />
 		<timeout seconds="7200" />
 		<hint_file File="hint_file/en.xml" />
 	</Parameters>

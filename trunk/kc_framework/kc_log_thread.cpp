@@ -66,7 +66,8 @@ bool CLogThread::WriteLogList(void)
 
 void CLogThread::Start(void)
 {
-    m_thrd = new thread(&CLogThread::Run, this);
+    if (string(m_context.GetCfgInfo("Config.Parameters.log_use_thread", "value", "0")) == "1")
+        m_thrd = new thread(&CLogThread::Run, this);
 }
 
 void CLogThread::Stop(void)
@@ -77,15 +78,21 @@ void CLogThread::Stop(void)
         pthread_cancel(m_thrd->native_handle());
         m_thrd->join();
     }
-    delete m_thrd;
-    m_thrd = nullptr;
-    this->WriteLogList();
+    if (nullptr != m_thrd)
+    {
+        delete m_thrd;
+        m_thrd = nullptr;
+        this->WriteLogList();
+    }
 }
 
 void CLogThread::AppendLog(TLogInfo& log)
 {
-    CKcLock lck(m_mtx);
-    if (nullptr != m_thrd) m_logList.push_back(log);
+    if (nullptr != m_thrd)
+    {
+        CKcLock lck(m_mtx);
+        m_logList.push_back(log);
+    }
     else this->WriteLog(log);
 }
 

@@ -34,29 +34,19 @@ void CKcLockWork::DelMutex(IMutex*& pMtx)
 ////////////////////////////////////////////////////////////////////////////////
 // 线程锁列表
 extern CBundleContext *g_context;
+typedef multimap<int, IKcLockWork::IMutex*> TMtxLst;
+thread_local static TMtxLst *g_MtxLst = new TMtxLst;
 struct CThrdMtxLst
 {
     typedef multimap<int, IKcLockWork::IMutex*> TMtxLst;
 
-    CThrdMtxLst(void) = default;
-
-    CThrdMtxLst(const CThrdMtxLst& c)
-    {
-        cout << "CThrdMtxLst clone" << endl;
-    }
-
-    CThrdMtxLst(CThrdMtxLst&& c)
-    {
-        cout << "CThrdMtxLst move" << endl;
-    }
-
     ~CThrdMtxLst(void)
     {
-        if (nullptr != m_MtxLst && !m_MtxLst->empty())
+        if (nullptr != g_MtxLst && !g_MtxLst->empty())
         {
             string sMtxLst = "/";
             TMtxLst mtxLs;
-            m_MtxLst->swap(mtxLs);
+            g_MtxLst->swap(mtxLs);
             for (auto v: mtxLs)
                 try
                 {
@@ -69,19 +59,19 @@ struct CThrdMtxLst
                 g_context->WriteLogFatal(sInfo.c_str(), __FUNCTION__);
             else
                 CTempLog::Write(sInfo, __FUNCTION__);
-            delete m_MtxLst;
-            m_MtxLst = nullptr;
             exit(pthread_self());
+        }
+        else if (nullptr != g_MtxLst)
+        {
+            delete g_MtxLst;
+            g_MtxLst = nullptr;
         }
     };
 
     TMtxLst& MtxLst(void)
     {
-        return *m_MtxLst;
+        return *g_MtxLst;
     }
-
-private:
-    TMtxLst *m_MtxLst = new TMtxLst;
 };
 thread_local static CThrdMtxLst g_ThrdMtxLst;
 

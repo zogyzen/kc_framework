@@ -38,6 +38,18 @@ struct CThrdMtxLst
 {
     typedef multimap<int, IKcLockWork::IMutex*> TMtxLst;
 
+    CThrdMtxLst(void) = default;
+
+    CThrdMtxLst(const CThrdMtxLst& c)
+    {
+        cout << "CThrdMtxLst clone" << endl;
+    }
+
+    CThrdMtxLst(CThrdMtxLst&& c)
+    {
+        cout << "CThrdMtxLst move" << endl;
+    }
+
     ~CThrdMtxLst(void)
     {
         if (nullptr != m_MtxLst && !m_MtxLst->empty())

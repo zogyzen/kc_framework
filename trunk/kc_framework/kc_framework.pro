@@ -11,8 +11,9 @@ LIBS += -static-libstdc++
 
 DEFINES  -= UNICODE
 CONFIG += -m32
+CONFIG += c++11
 
-DESTDIR += bin
+DESTDIR += ../bin
 TARGET = kc_framework
 TEMPLATE = lib
 

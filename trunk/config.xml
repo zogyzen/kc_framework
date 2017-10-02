@@ -6,10 +6,7 @@
 		<timeout seconds="7200" />
 		<hint_file File="hint_file/en.xml" />
 	</Parameters>
-	<Directories>
-		<lib Path="lib" />
-	</Directories>
 	<Modules>
-		<kc_web_main Path="modules" Activation="2" />
+		<kc_framework_test_module Path="" Activation="2" />
 	</Modules>
 </Config>

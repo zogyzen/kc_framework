@@ -27,6 +27,7 @@ namespace KC
             string sDllPath = sDir + "/" + c_frameworkDllName + c_dll_extname;
             system::error_code ec;
             m_lib.load(sDllPath, ec);
+            if (ec) cout << "Load framework fail - " << ec.message() << " - " << sDllPath << endl;
             if (m_lib.is_loaded())
             {
                 if (m_lib.has(c_frameworFuncName))
@@ -36,6 +37,7 @@ namespace KC
                     m_fx = &fx;
                     m_context = dynamic_cast<IBundleContextEx*>(fx.NewContext((sDir + "/" + g_ModuleDirectory).c_str()));
                 }
+                else cout << "Load framework fail, not exists function " << c_frameworFuncName << endl;
             }
         }
         ~BundleContextHelper(void)

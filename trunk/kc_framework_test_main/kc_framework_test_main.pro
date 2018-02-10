@@ -1,6 +1,7 @@
 QT -= gui core
 
 INCLUDEPATH += ../include
+LIBS += -static-libstdc++
 
 CONFIG += c++11
 
@@ -28,9 +29,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS +=
 
 win32 {
-    INCLUDEPATH += D:/library/boost_1_64_qt/include/
-    LIBS += -L"D:/library/boost_1_64_qt/lib/"
-    LIBS += -lboost_system-mgw53-mt-1_64 -lboost_thread-mgw53-mt-1_64 -lboost_filesystem-mgw53-mt-1_64
+    INCLUDEPATH += D:\mycode\library\windows\boost-1_66-qt\include
+    LIBS += -LD:\mycode\library\windows\boost-1_66-qt\lib720
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_system-mgw72-mt-x32-1_66.a
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_filesystem-mgw72-mt-x32-1_66.a
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_thread-mgw72-mt-x32-1_66.a
     SOURCES +=
     DEFINES += WIN32
 }

@@ -55,13 +55,13 @@ HEADERS += \
     std.h
 
 win32{
-    INCLUDEPATH += D:\mycode\library\windows\boost_1_64_qt\include
-    LIBS += -LD:\mycode\library\windows\boost_1_64_qt\lib
-    LIBS += D:\mycode\library\windows\boost_1_64_qt\lib\libboost_system-mgw53-1_64.a
-    LIBS += D:\mycode\library\windows\boost_1_64_qt\lib\libboost_filesystem-mgw53-1_64.a
-    LIBS += D:\mycode\library\windows\boost_1_64_qt\lib\libboost_date_time-mgw53-1_64.a
-    LIBS += D:\mycode\library\windows\boost_1_64_qt\lib\libboost_log-mgw53-mt-1_64.a
-    LIBS += D:\mycode\library\windows\boost_1_64_qt\lib\libboost_thread-mgw53-mt-1_64.a
+    INCLUDEPATH += D:\mycode\library\windows\boost-1_66-qt\include
+    LIBS += -LD:\mycode\library\windows\boost-1_66-qt\lib720
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_system-mgw72-mt-x32-1_66.a
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_filesystem-mgw72-mt-x32-1_66.a
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_date_time-mgw72-mt-x32-1_66.a
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_log-mgw72-mt-x32-1_66.a
+    LIBS += D:\mycode\library\windows\boost-1_66-qt\lib720\libboost_thread-mgw72-mt-x32-1_66.a
     LIBS += -ldbghelp
     LIBS += -lpsapi
     DEFINES += WIN32

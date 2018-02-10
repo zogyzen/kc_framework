@@ -65,6 +65,17 @@ win32{
     LIBS += -ldbghelp
     LIBS += -lpsapi
     DEFINES += WIN32
+
+    varCopyConfig = \"$$PWD/../config.xml\" \"$$OUT_PWD/../bin/\"
+    varCopyConfig ~= s,/,\\,g
+    varCopyHintFile = \"$$PWD/../hint_file\" \"$$OUT_PWD/../bin/hint_file\"
+    varCopyHintFile ~= s,/,\\,g
+    #copyCmd.depends = first
+    #copyCmd.commands = $$QMAKE_COPY $$varCopyCmdPath
+    QMAKE_POST_LINK += $$QMAKE_COPY $$varCopyConfig $$escape_expand(\\n\\t)
+    QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$varCopyHintFile
+    #message($$QMAKE_POST_LINK)
+    export(QMAKE_POST_LINK)
 }
 unix {
     target.path = /usr/lib

@@ -26,5 +26,5 @@ const IBundle& CKCTestMod::getBundle(void) const
 // 启动
 void CKCTestMod::run(void)
 {
-    cout << "Run module - kc_framework_test_module" << endl;
+    cout << "Run module success - kc_framework_test_module" << endl;
 }
